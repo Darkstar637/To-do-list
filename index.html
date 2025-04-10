@@ -1,237 +1,147 @@
 <!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8">
-  <title>Untitled</title>
-  
-
-</head>
-<body>
-<!-- partial:index.partial.html -->
-<!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>To-Do List</title>
-
     <style>
-
         @font-face {
-
             font-family: 'PrettyNeat';
-
             src: url('PrettyNeat-Regular.otf') format('opentype');
-
         }
 
         body {
-
             font-family: 'PrettyNeat', sans-serif;
-
             background-color: #f0f0f0;
-
             margin: 0;
-
             padding: 0;
-
             display: flex;
-
             justify-content: center;
-
             align-items: center;
-
             height: 100vh;
-
         }
-
         .todo-container {
-
             background: #fff;
-
             padding: 20px;
-
             border-radius: 8px;
-
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
             width: 300px;
-
         }
-
         .todo-container h1 {
-
             font-size: 24px;
-
             margin-bottom: 20px;
-
         }
-
         .todo-list {
-
             list-style: none;
-
             padding: 0;
-
             margin: 0;
-
         }
-
         .todo-list li {
-
             background: #f9f9f9;
-
             padding: 10px;
-
             margin-bottom: 10px;
-
             border-radius: 4px;
-
             display: flex;
-
             justify-content: space-between;
-
             align-items: center;
-
         }
-
         .todo-list li button {
-
             background: #ff6b6b;
-
             color: #fff;
-
             border: none;
-
             border-radius: 4px;
-
             padding: 5px 10px;
-
             cursor: pointer;
-
         }
-
         .todo-list li button:hover {
-
             background: #ff4c4c;
-
         }
-
         .add-todo {
-
             display: flex;
-
             margin-top: 10px;
-
         }
-
         .add-todo input {
-
             flex: 1;
-
             padding: 10px;
-
             border: 1px solid #ccc;
-
             border-radius: 4px;
-
             margin-right: 10px;
-
         }
-
         .add-todo button {
-
             background: #4caf50;
-
             color: white;
-
             border: none;
-
             border-radius: 4px;
-
             padding: 10px;
-
             cursor: pointer;
-
         }
-
         .add-todo button:hover {
-
             background: #45a049;
-
         }
-
     </style>
-
 </head>
-
 <body>
-
     <div class="todo-container">
-
         <h1>To-Do List</h1>
-
         <ul class="todo-list" id="todo-list">
-
             <!-- To-do items will appear here -->
-
         </ul>
-
         <div class="add-todo">
-
             <input type="text" id="new-todo" placeholder="Add a new task...">
-
             <button onclick="addTodo()">Add</button>
-
         </div>
-
     </div>
 
     <script>
+        // Load saved tasks from localStorage
+        window.onload = function() {
+            const todoList = document.getElementById('todo-list');
+            const savedTodos = JSON.parse(localStorage.getItem('todos')) || [];
+
+            savedTodos.forEach(todo => {
+                const li = createTodoElement(todo);
+                todoList.appendChild(li);
+            });
+        };
 
         function addTodo() {
-
             const todoInput = document.getElementById('new-todo');
-
             const todoList = document.getElementById('todo-list');
 
             if (todoInput.value.trim() !== "") {
-
-                const li = document.createElement('li');
-
-                li.textContent = todoInput.value;
-
-                const deleteButton = document.createElement('button');
-
-                deleteButton.textContent = 'Delete';
-
-                deleteButton.onclick = function() {
-
-                    todoList.removeChild(li);
-
-                };
-
-                li.appendChild(deleteButton);
-
+                const li = createTodoElement(todoInput.value);
                 todoList.appendChild(li);
 
+                saveTodos();
                 todoInput.value = "";
-
             }
-
         }
 
+        function createTodoElement(text) {
+            const li = document.createElement('li');
+            li.textContent = text;
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.onclick = function() {
+                li.remove();
+                saveTodos();
+            };
+
+            li.appendChild(deleteButton);
+            return li;
+        }
+
+        function saveTodos() {
+            const todoList = document.getElementById('todo-list');
+            const todos = [];
+
+            todoList.querySelectorAll('li').forEach(li => {
+                todos.push(li.firstChild.textContent);
+            });
+
+            localStorage.setItem('todos', JSON.stringify(todos));
+        }
     </script>
-
-</body>
-
-</html>
-<!-- partial -->
-  
 </body>
 </html>
