@@ -93,10 +93,10 @@
     </div>
 
     <script>
-        // Load saved tasks from localStorage
+        // Load saved tasks from localStorage on page load
         window.onload = function() {
-            const todoList = document.getElementById('todo-list');
             const savedTodos = JSON.parse(localStorage.getItem('todos')) || [];
+            const todoList = document.getElementById('todo-list');
 
             savedTodos.forEach(todo => {
                 const li = createTodoElement(todo);
@@ -111,7 +111,6 @@
             if (todoInput.value.trim() !== "") {
                 const li = createTodoElement(todoInput.value);
                 todoList.appendChild(li);
-
                 saveTodos();
                 todoInput.value = "";
             }
@@ -137,7 +136,7 @@
             const todos = [];
 
             todoList.querySelectorAll('li').forEach(li => {
-                todos.push(li.firstChild.textContent);
+                todos.push(li.childNodes[0].textContent); // Get only the text content
             });
 
             localStorage.setItem('todos', JSON.stringify(todos));
